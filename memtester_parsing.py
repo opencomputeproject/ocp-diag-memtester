@@ -101,7 +101,7 @@ class MemtesterLexer(Lexer):
 # https://sly.readthedocs.io/en/latest/sly.html#writing-a-parser
 class MemtesterParser(Parser):
     # A list of supported memtester versions
-    _known_versions = ["4.6.0"]
+    _known_versions = ["4.6.0", "4.5.1", "4.5.0"]
 
     # Get the token list from the lexer (required)
     tokens = MemtesterLexer.tokens
