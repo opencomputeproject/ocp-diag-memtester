@@ -1,7 +1,8 @@
 # syntax=docker/dockerfile:1
 FROM ubuntu:23.10
 WORKDIR ~
-RUN apt-get update && apt-get install -y python3 pip wget
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 pip wget build-essential
 COPY requirements.txt ./
 RUN pip install -r requirements.txt --break-system-packages
 ARG MT_VERSION=4.6.0 # Version of memtester to build and run
