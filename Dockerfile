@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 FROM ubuntu:23.10
-WORKDIR ~
+WORKDIR /home/root
 RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 pip wget build-essential
 COPY requirements.txt ./
