@@ -85,7 +85,8 @@ class MemtesterLexer(Lexer):
     # Ignored sequences
     ignore_header = r"(Copyright|Licensed|pagesize|pagesizemask|want|got).+\n"
     ignore_status = r"(testing|setting)\s+[0-9]+"
-    ignore_desc = r"(possible\sbad\saddress\sline\s)?at physical address"
+    ignore_flr1_desc = r"possible\sbad\saddress\sline\sat\s(physical\saddress|offset)"
+    ignore_flr3_desc = r"at\s(physical\saddress|offset)"
     ignore_skip = r"Skipping\sto\snext\stest\.\.\."
     ignore_done = r"Done\."
     

@@ -74,7 +74,8 @@ def main():
                 mt_args = args.mt_args.split(" ")
                 with redirect_stderr(None): # Magic to silence sh lib
                     # For _ok_code see https://linux.die.net/man/8/memtester
-                    observer.run(mt_cmd(*mt_args, _iter=True, _ok_code=(0, 2, 4)))
+                    observer.run(mt_cmd(*mt_args,
+                        _err_to_out = True, _iter=True, _ok_code=(0, 2, 4, 2 | 4)))
             except sh.CommandNotFound as e:
                 m = "Memtester not found: {}".format(e)
                 step.add_error(symptom="memtester-not-found", message=m)
