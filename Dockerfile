@@ -11,5 +11,5 @@ ENV MT_ARCHIVE ${MT_NAME}.tar.gz
 RUN wget https://pyropus.ca./software/memtester/old-versions/${MT_ARCHIVE} && \
     tar -xf ${MT_ARCHIVE} && cd ${MT_NAME} && make && mv memtester .. && \
     cd .. && rm -r ${MT_NAME} && rm ${MT_ARCHIVE}
-COPY memtester_parsing.py main.py ./
+COPY src/ ./
 CMD python3 main.py --mt_args="100m 3" --mt_path=./memtester
