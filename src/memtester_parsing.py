@@ -33,6 +33,9 @@ class Loop:
 
 @dataclass
 class MemtesterCallbacks:
+    # Called when the next output line is read from memtester
+    line_ready: Callable[[str], None] = lambda line: None
+
     # Called when a lexing or parsing error occurs
     parsing_error: Callable[[str], None] = lambda desc: None
     
@@ -169,10 +172,10 @@ class MemtesterObserver:
     def _token_generator(self, stdout_gen):
         lexer = MemtesterLexer(self.callbacks)
         for lineno, line in enumerate(stdout_gen, 1):
+            self.callbacks.line_ready(line)
             for token in lexer.tokenize(line, lineno=lineno):
                 yield token
                 
     def run(self, stdout_gen):
         parser = MemtesterParser(self.callbacks)
         parser.parse(self._token_generator(stdout_gen))           
-      
