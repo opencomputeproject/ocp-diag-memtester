@@ -40,7 +40,7 @@ class MemtesterCallbacks:
     parsing_error: Callable[[str], None] = lambda desc: None
     
     # Called when memtester version is read
-    version: Callable[[str, bool], None] = lambda version, is_known: None
+    version_ready: Callable[[str, bool], None] = lambda version, is_known: None
     
     # Called when all loops finish
     run_ready: Callable[[int], None] = lambda failed_loop_count: None
@@ -119,7 +119,7 @@ class MemtesterParser(Parser):
 
     @_("VER")  
     def version(self, p):
-        self._callbacks.version(p.VER, p.VER in self._known_versions)
+        self._callbacks.version_ready(p.VER, p.VER in self._known_versions)
         
     @_("loops loop", "loop")   
     def loops(self, p):
@@ -153,7 +153,7 @@ class MemtesterParser(Parser):
         
     @_("FLR HEX HEX HEX")
     def failure(self, p):
-        return BadAddress(addr=p.HEX0, left_val=p.HEX1, right_val=p.HEX2)      
+        return BadAddress(addr=p.HEX2, left_val=p.HEX0, right_val=p.HEX1)      
         
     @_("FLR HEX")
     def failure(self, p):

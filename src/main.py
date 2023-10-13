@@ -33,7 +33,7 @@ def main():
             if (not is_known):
                 m = "This version of memtester was not tested. Expect parsing errors"
                 step.add_log(tv.LogSeverity.WARNING, m)
-        observer.callbacks.version = version_callback
+        observer.callbacks.version_ready = version_callback
         
         # Report loop results
         def loop_callback(loop):
