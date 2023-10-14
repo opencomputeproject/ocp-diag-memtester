@@ -77,9 +77,6 @@ def main():
         # Log raw memtester output if necessary
         if args.mt_log_filename:
             estack.enter_context(log_file := open(args.mt_log_filename, "w"))
-            name = os.path.basename(args.mt_log_filename)
-            uri = "file://" + os.path.abspath(args.mt_log_filename)
-            step.add_file(name=name, uri=uri, is_snapshot=False)
             def line_ready_callback(line):
                 log_file.write(line)
             observer.callbacks.line_ready = line_ready_callback
@@ -100,6 +97,12 @@ def main():
             step.add_error(symptom="memtester-error-code", message=m)
             step.add_log(tv.LogSeverity.ERROR, "Memtester error description: {}".format(e))
         
+        # Link the raw output file at the end, so that it is complete when linked
+        if args.mt_log_filename:
+            name = os.path.basename(args.mt_log_filename)
+            uri = "file://" + os.path.abspath(args.mt_log_filename)
+            step.add_file(name=name, uri=uri, is_snapshot=False)
+
         bad_addrs.end()
                
 if __name__ == '__main__':
