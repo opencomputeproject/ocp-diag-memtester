@@ -15,8 +15,10 @@ For Debian-based operating systems the procedure above may look as follows:
 apt install memtester
 git clone https://github.com/opencomputeproject/ocp-diag-memtester.git
 cd ocp-diag-memtester
+python -m venv .
+source bin/activate
 pip install -r requirements.txt
-python3 main.py --mt_args="100M 3"
+python3 src/main.py --mt_args="100M 3"
 ```
 
 In the last command, `mt_args` specifies arguments that the diag will pass to `memtester`.
@@ -47,22 +49,29 @@ python3 main.py --mt_args="100M 3" --mt_path="/my/favorite/location/memtester"
 In order for this diag to work properly, the output format of your `memtester` must comply with
 one of the supported versions.
 
+## Running unit tests
+Execute the following command in the repo's root directory to run the diag's unit tests:
+```
+python -m unittest
+```
+
 ## Testing older memtester versions using Docker
 If you need to test this diag with an older memtester version, you can use `Dockerfile` from the root directory of this repo.
 This `Dockerfile` takes care of all necessary dependencies for the diag. In addition to that, it downloads `memtester` of the required version from its author's website and builds it.
 You can use the following command to build and run the container:
 
 ```
-sudo docker build -t ocp_memtester --build-arg="MT_VERSION=<version>" . && sudo docker run --rm ocp_memtester
+docker build -t ocp_memtester --build-arg="MT_VERSION=<version>" . && docker run --rm -t ocp_memtester
 ```
 
 In the command above, replace `<version>` with the version of `memtester` you want to test. For example:
 
 ```
-sudo docker build -t ocp_memtester --build-arg="MT_VERSION=4.5.1" . && sudo docker run --rm ocp_memtester
+ docker build -t ocp_memtester --build-arg="MT_VERSION=4.5.1" . && docker run --rm -t ocp_memtester
 ```
+
+Note: add `sudo` to all `docker` invocations if necessary.
 
 The list of available `memtester` versions can be found on [this page](https://pyropus.ca./software/memtester/old-versions).
 
 Since there is no Python parser for OCP-compliant output yet, the container does not do automatic diag validation, so you have to manually confirm whether the version you chose works correctly.
-
