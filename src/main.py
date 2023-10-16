@@ -75,11 +75,13 @@ def main():
                 step.add_diagnosis(tv.DiagnosisType.PASS, verdict="memtester-passed")
             else:
                 step.add_diagnosis(tv.DiagnosisType.FAIL, verdict="memtester-failed")
+                raise tv.TestRunError(status=tv.TestStatus.COMPLETE, result=tv.TestResult.FAIL)
         observer.callbacks.run_ready = run_callback
         
         # Report parsing errors (supposed to only happen with unknown memtester versions)
         def parsing_error_callback(desc):
             step.add_error(symptom="memtester-parsing-error", message=desc)
+            raise tv.TestRunError(status=tv.TestStatus.ERROR, result=tv.TestResult.NOT_APPLICABLE)
         observer.callbacks.parsing_error = parsing_error_callback
 
         # Log raw memtester output if necessary
@@ -90,7 +92,7 @@ def main():
             observer.callbacks.line_ready = line_ready_callback
         
         # Run memtester (finally!)
-        try:  
+        try:
             mt_cmd = sh.Command(args.mt_path)
             mt_args = args.mt_args.split(" ")
             with contextlib.redirect_stderr(None): # Magic to silence sh lib
