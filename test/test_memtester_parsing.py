@@ -1,6 +1,5 @@
-# (c) Open Compute Project
+# (c) OCP Test & Validation
 # (c) Google LLC
-# (c) Igor Semenov (goshik92@gmail.com)
 # 
 # Use of this source code is governed by an MIT-style
 # license that can be found in the LICENSE file or at
@@ -11,7 +10,6 @@ from unittest.mock import MagicMock, call
 from pathlib import Path
 from src.memtester_parsing import MemtesterObserver, Test, Loop
 from src.memtester_parsing import OkResult, BadAddress, BadLine
-
 
 class TestMemtesterObserver(TestCase):
     def run_observer(self, filename):
