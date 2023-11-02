@@ -70,7 +70,7 @@ In the command above, replace `<version>` with the version of `memtester` you wa
  docker build -t ocp_memtester --build-arg="MT_VERSION=4.5.1" . && docker run --rm -t ocp_memtester
 ```
 
-Note: add `sudo` to all `docker` invocations if necessary.
+Note: if you face any permission issues when running docker, please refer to [this article](https://docs.docker.com/engine/install/linux-postinstall).
 
 The list of available `memtester` versions can be found on [this page](https://pyropus.ca./software/memtester/old-versions).
 
