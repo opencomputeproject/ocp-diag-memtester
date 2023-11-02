@@ -10,31 +10,53 @@ from dataclasses import dataclass
 from typing import Union, Callable
 import re
 
+# Contains bad address info reported by memtester.
+# Reported by all tests except "Stuck Address".
 @dataclass
 class BadAddress:
+    # Address that is considered bad
     addr: int
+
+    # Values that were supposed to match
+    # when read from memory, but miscompared
     left_val: int
     right_val: int
-    
+
+# Contains bad address line info reported by memtester.
+# Reported by the "Stuck Address" test only.
 @dataclass
 class BadLine:
+    # Address of the line that is considered bad
     addr: int
-    
+
+# A unit object for indicating a passing memory test 
 @dataclass
 class OkResult:
     pass
 
+# Info about one of the memory tests
 @dataclass
 class Test:
+    # Test name as reported by memtester
     name: str
+
+    # Test result (pass or a list of bad addresses)
     result: Union[OkResult, list[Union[BadAddress, BadLine]]]
+
+    # Checks whether this test passed or not
     def passed(self) -> bool:
         return type(self.result) is OkResult
-    
+
+# Contains info about one iteration of memory testing
 @dataclass
 class Loop:
+    # Sequence number of this iteration
     index: int
+
+    # A list of tests that ran during this iteration
     tests: list[Test]
+
+    # Fetches failed tests of this iteration
     def failed_tests(self) -> list[Test]:
         return [t for t in self.tests if not t.passed()]
 
