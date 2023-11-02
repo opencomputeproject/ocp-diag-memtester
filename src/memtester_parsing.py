@@ -105,7 +105,7 @@ class MemtesterLexer(Lexer):
     
     def error(self, t):
         m = "Illegal character '{}' at line {}:{}".format(t.value[0], t.lineno, t.index)
-        self._callbacks.parsing_error(m);
+        self._callbacks.parsing_error(m)
         self.index += 1
 
 
