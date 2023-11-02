@@ -61,7 +61,7 @@ class MemtesterCallbacks:
 
 # https://sly.readthedocs.io/en/latest/sly.html#writing-a-lexer
 class MemtesterLexer(Lexer):
-    tokens = { VER, OK, FLR, LOOP, TEST, HEX }
+    tokens = { VER, OK, FAIL, LOOP, TEST, HEX }
 
     TEST = (
         r"Stuck\sAddress|Random\sValue|Compare\s(XOR|SUB|MUL|DIV|OR|AND)|"
@@ -86,17 +86,17 @@ class MemtesterLexer(Lexer):
         t.value = int(t.value, 16)
         return t
     
-    FLR = r"FAILURE"
+    FAIL = r"FAILURE"
     OK = r"ok"
     
     # String containing ignored characters (between tokens)
     ignore = " \n\t\b:\\/|!=.-"
     
     # Ignored sequences
-    ignore_header = r"(Copyright|Licensed|pagesize|pagesizemask|want|got).+\n"
+    ignore_header = r"^(Copyright|Licensed|pagesize|pagesizemask|want|got).+\n"
     ignore_status = r"(testing|setting)\s+[0-9]+"
-    ignore_flr1_desc = r"possible\sbad\saddress\sline\sat\s(physical\saddress|offset)"
-    ignore_flr3_desc = r"at\s(physical\saddress|offset)"
+    ignore_fail1_desc = r"possible\sbad\saddress\sline\sat\s(physical\saddress|offset)"
+    ignore_fail3_desc = r"at\s(physical\saddress|offset)"
     ignore_skip = r"Skipping\sto\snext\stest\.\.\."
     ignore_done = r"Done\."
     
@@ -158,11 +158,11 @@ class MemtesterParser(Parser):
     def failures(self, p):
         return ([] if len(p) == 1 else p.failures) + [p.failure]
         
-    @_("FLR HEX HEX HEX")
+    @_("FAIL HEX HEX HEX")
     def failure(self, p):
         return BadAddress(addr=p.HEX2, left_val=p.HEX0, right_val=p.HEX1)      
         
-    @_("FLR HEX")
+    @_("FAIL HEX")
     def failure(self, p):
         return BadLine(addr=p.HEX) 
     
