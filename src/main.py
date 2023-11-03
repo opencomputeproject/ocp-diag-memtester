@@ -32,8 +32,6 @@ def main():
     with contextlib.ExitStack() as estack:
         estack.enter_context(run.scope(dut=dut))
         estack.enter_context((step := run.add_step("run-memtester")).scope())
-
-        bad_addrs = step.start_measurement_series(name="bad_addrs")
         
         # Check if a supported version of memtester is installed in the system
         def version_callback(version, is_known):
@@ -58,7 +56,7 @@ def main():
                 # Record failed addresses
                 for test in tests:
                     for r in test.result:
-                        bad_addrs.add_measurement(value=r.addr)
+                        step.add_measurement(name="bad-address", value=r.addr)
         observer.callbacks.loop_ready = loop_callback
         
         # Report individual tests to make long runs more responsive
@@ -112,8 +110,6 @@ def main():
             name = os.path.basename(args.mt_log_filename)
             uri = "file://" + os.path.abspath(args.mt_log_filename)
             step.add_file(name=name, uri=uri, is_snapshot=False)
-
-        bad_addrs.end()
                
 if __name__ == '__main__':
     main()
