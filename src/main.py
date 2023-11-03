@@ -20,7 +20,7 @@ def main():
     parser.add_argument("--mt_args", default="",
         help="Memtester arguments packed into a string. See `man memtester` for more detail")
     parser.add_argument("--mt_log_filename", default=None,
-        help="Path to the file that will contain raw memtester output (both STDOUT and STDERR)")
+        help="Path to the log file for dumping raw memtester output (both STDOUT and STDERR)")
     args = parser.parse_args()
 
     run = tv.TestRun(name="memtester", version="1.0")
