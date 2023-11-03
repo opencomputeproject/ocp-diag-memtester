@@ -7,7 +7,7 @@
 
 from sly import Lexer, Parser
 from dataclasses import dataclass
-from typing import Union, Callable
+from typing import Union, Callable, Iterator
 import re
 
 # Contains bad address info reported by memtester.
@@ -198,13 +198,13 @@ class MemtesterObserver:
     def __init__(self):
         self.callbacks = MemtesterCallbacks()
         
-    def _token_generator(self, stdout_gen):
+    def _token_generator(self, stdout: Iterator[str]):
         lexer = MemtesterLexer(self.callbacks)
-        for lineno, line in enumerate(stdout_gen, 1):
+        for lineno, line in enumerate(stdout, 1):
             self.callbacks.line_ready(line)
             for token in lexer.tokenize(line, lineno=lineno):
                 yield token
                 
-    def run(self, stdout_gen):
+    def run(self, stdout: Iterator[str]):
         parser = MemtesterParser(self.callbacks)
-        parser.parse(self._token_generator(stdout_gen))           
+        parser.parse(self._token_generator(stdout))           
