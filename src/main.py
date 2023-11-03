@@ -10,6 +10,7 @@ import argparse
 import sh
 import re
 import os
+import shlex
 import contextlib
 from memtester_parsing import MemtesterObserver
 
@@ -93,7 +94,7 @@ def main():
         # Run memtester (finally!)
         try:
             mt_cmd = sh.Command(args.mt_path)
-            mt_args = args.mt_args.split(" ")
+            mt_args = shlex.split(args.mt_args)
             with contextlib.redirect_stderr(None): # Magic to silence sh lib
                 # For _ok_code see https://linux.die.net/man/8/memtester
                 observer.run(mt_cmd(*mt_args,
