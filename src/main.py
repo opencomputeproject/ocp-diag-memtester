@@ -22,6 +22,9 @@ def main():
         help="Memtester arguments packed into a string. See `man memtester` for more detail")
     parser.add_argument("--mt_log_filename", default=None,
         help="Path to the log file for dumping raw memtester output (both STDOUT and STDERR)")
+    parser.add_argument("--mt_permit_unknown_versions", default=False,
+        help="If specified, unsupported memtester versions will not trigger the ERROR status",
+        action=argparse.BooleanOptionalAction)
     args = parser.parse_args()
 
     run = tv.TestRun(name="memtester", version="1.0")
@@ -39,6 +42,12 @@ def main():
             if (not is_known):
                 m = "This version of memtester was not tested. Expect parsing errors"
                 step.add_log(tv.LogSeverity.WARNING, m)
+                if not args.mt_permit_unknown_versions:
+                    m = "The diag is configured to fail with unknown memtester versions"
+                    step.add_error(symptom="memtester-unknown-version", message=m)
+                    raise tv.TestRunError(
+                        status=tv.TestStatus.ERROR,
+                        result=tv.TestResult.NOT_APPLICABLE)
         observer.callbacks.version_ready = version_callback
         
         # Report loop results
