@@ -70,10 +70,11 @@ def main():
         
         # Report individual tests to make long runs more responsive
         def test_callback(test):
+            m = "Memory test '{}' {}"
             if test.passed():
-                step.add_log(tv.LogSeverity.INFO, "Test '{}' passed".format(test.name))
+                step.add_log(tv.LogSeverity.INFO, m.format(test.name, "passed"))
             else:
-                step.add_log(tv.LogSeverity.ERROR, "Test '{}' failed".format(test.name))
+                step.add_log(tv.LogSeverity.ERROR, m.format(test.name, "failed"))
         observer.callbacks.test_ready = test_callback
         
         # Report diagnosis
