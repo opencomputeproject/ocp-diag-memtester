@@ -4,6 +4,8 @@
 This repo contains Python scripts that turn `memtester` into an OCP-compliant diagnostic by parsing its output using [SLY](https://sly.readthedocs.io/en/latest/), a Python implementation of [Lex](https://en.wikipedia.org/wiki/Lex_(software)) and [Yacc](https://en.wikipedia.org/wiki/Yacc).
 The parsing process happens in runtime, allowing the diag to report partial results while the memory test is still running.
 
+Currently, Python >=3.11 is required to run this diag.
+
 ## Basic usage
 To run the diag do the following:
 1. Install `memtester` on your DUT. Make sure the version you have is [supported](#supported-versions).
