@@ -10,75 +10,95 @@ from dataclasses import dataclass
 from typing import Union, Callable, Iterator
 import re
 
-# Contains bad address info reported by memtester.
-# Reported by all tests except "Stuck Address".
 @dataclass
 class BadAddress:
-    # Address that is considered bad
+    """
+    Contains bad address info reported by memtester.
+    Currently reported by all tests except 'Stuck Address'.
+    """
+
     addr: int
+    """Address that is considered bad."""
 
-    # Values that were supposed to match
-    # when read from memory, but miscompared
     left_val: int
-    right_val: int
+    """
+    One of the values that were supposed to match
+    when read from memory, but miscompared.
+    """
 
-# Contains bad address line info reported by memtester.
-# Reported by the "Stuck Address" test only.
+    right_val: int
+    """
+    One of the values that were supposed to match
+    when read from memory, but miscompared.
+    """
+
 @dataclass
 class BadLine:
-    # Address of the line that is considered bad
-    addr: int
+    """ 
+    Contains bad address line info reported by memtester.
+    Reported by the 'Stuck Address' test only.
+    """
 
-# A unit object for indicating a passing memory test 
+    addr: int
+    """Address of the line that is considered bad."""
+
 @dataclass
 class OkResult:
+    """A unit object for indicating a passing memory test."""    
     pass
 
-# Info about one of the memory tests
 @dataclass
 class Test:
-    # Test name as reported by memtester
+    """Contains info about one of the memory tests."""
+
     name: str
+    """Test name as reported by memtester."""
 
-    # Test result (pass or a list of bad addresses)
     result: Union[OkResult, list[Union[BadAddress, BadLine]]]
+    """Test result (pass or a list of bad addresses)."""
 
-    # Checks whether this test passed or not
     def passed(self) -> bool:
+        """Checks whether this test passed or not."""
         return type(self.result) is OkResult
 
-# Contains info about one iteration of memory testing
 @dataclass
 class Loop:
-    # Sequence number of this iteration
+    """Contains info about one iteration of memory testing."""
+
     index: int
+    """Sequence number of this iteration."""
 
-    # A list of tests that ran during this iteration
     tests: list[Test]
-
-    # Fetches failed tests of this iteration
+    """A list of tests that ran during this iteration."""
+    
     def failed_tests(self) -> list[Test]:
+        """Fetches failed tests of this iteration."""
         return [t for t in self.tests if not t.passed()]
 
 @dataclass
 class MemtesterCallbacks:
-    # Called when the next output line is read from memtester
-    line_ready: Callable[[str], None] = lambda line: None
+    """
+    A collection of callbacks that are invoked
+    when certain output fragments are read from memtester.
+    """
 
-    # Called when a lexing or parsing error occurs
+    line_ready: Callable[[str], None] = lambda line: None
+    """Called when the next output line is read from memtester."""
+ 
     parsing_error: Callable[[str], None] = lambda desc: None
+    """Called when a lexing or parsing error occurs."""
     
-    # Called when memtester version is read
     version_ready: Callable[[str, bool], None] = lambda version, is_known: None
+    """Called when memtester version is read."""
     
-    # Called when all loops finish
     run_ready: Callable[[int], None] = lambda failed_loop_count: None
+    """Called when all loops finish."""
     
-    # Called when a loop of memory testing finish
     loop_ready: Callable[[Loop], None] = lambda loop: None
+    """Called when a loop of memory testing finish."""
     
-    # Called when a test within a loop finishes
     test_ready: Callable[[Test], None] = lambda test: None
+    """Called when a test within a loop finishes."""
 
 
 # https://sly.readthedocs.io/en/latest/sly.html#writing-a-lexer
